@@ -4,6 +4,9 @@
 window.CODECAVE = {
   email: "support.codecave@gmail.com",
 
+  /* Hackathon 27 kickoff, ISO format "YYYY-MM-DDTHH:mm:ssZ". Leave "" until a date is set. */
+  hackathonDate: "",
+
   /* Google Forms embed links. Paste each form's "Send → Embed HTML" src URL
      (looks like https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true).
      Leave "" to show a friendly "coming soon" placeholder. */

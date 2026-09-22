@@ -30,6 +30,7 @@ assets/img/             Logo (cropped) and icons
 ## Things you edit
 - **Google Forms:** paste each form's embed URL into `assets/js/config.js` → `forms`. Empty ones show a friendly placeholder.
 - **Nav / footer:** `assets/js/config.js`.
+- **Hackathon 27 date:** set `hackathonDate` in `assets/js/config.js` (ISO format) once you have one — the countdown activates automatically; until then it shows "Date to be announced."
 - **Placeholder content on the homepage:** the four stats (500+, 25+, 12+, 99.8%), the testimonial quote, and avatar initials. Replace with real figures.
 
 ## Rebuilding the 3D hero (optional)
@@ -41,6 +42,6 @@ npx esbuild src/hero3d.js --bundle --minify --format=iife --outfile=assets/js/he
 ## Build stages
 - [x] **Stage 1** — Design system, themes, header/footer, page transitions, motion engine, form-embed component, homepage
 - [x] **Stage 2** — Software solutions: Website Development (+ pricing checker), Mobile App Development (+ pricing checker), Automation Workflows
-- [ ] **Stage 3** — Learning: AI Utility Training, AI-Assisted Dev Training, Hackathon 27
+- [x] **Stage 3** — Learning: AI Utility Training, AI-Assisted Dev Training, Hackathon 27
 - [ ] **Stage 4** — Campus Ambassadors, Partnership Initiatives, Products, Sponsor Initiatives, Contact + FAQ
 - [ ] **Stage 5** — QA: accessibility, performance, SEO (sitemap, robots), final polish

@@ -293,3 +293,32 @@ html[data-theme="dark"] .term{background:#060912}
 /* ---------- Pillars (automation) ---------- */
 .pillar{position:relative}
 .pillar .q-num{position:absolute;top:-14px;left:-14px;background:var(--pink);color:#fff}
+
+/* ---------- Tracks (training pages) ---------- */
+.tracks{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.track{display:flex;flex-direction:column}
+.track .tag{align-self:flex-start;margin-bottom:.75rem}
+.track .foot{margin-top:auto;padding-top:1rem;border-top:2px dashed var(--line);font:600 .78rem var(--font-mono);color:var(--muted)}
+
+/* ---------- Curriculum accordion ---------- */
+.curric{display:grid;gap:.75rem}
+.week{border:2px solid var(--line);border-radius:var(--r-md);background:var(--surface);box-shadow:3px 3px 0 var(--shadow);overflow:hidden}
+.week summary{list-style:none;display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;cursor:pointer;font:700 1.02rem var(--font-display)}
+.week summary::-webkit-details-marker{display:none}
+.week summary::after{content:"+";margin-left:auto;font-size:1.4rem;line-height:1;transition:transform .25s var(--ease)}
+.week[open] summary::after{transform:rotate(45deg)}
+.week summary .wk{display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:50%;background:var(--bg);border:2px solid var(--line);font:700 .78rem var(--font-mono);flex:none}
+.week__body{padding:0 1.25rem 1.25rem 4.4rem;color:var(--ink-2)}
+.week__body ul{margin:.5rem 0 0;padding-left:1.1rem}
+.week__body li{margin-bottom:.3rem}
+
+/* ---------- Stack chips ---------- */
+.stack-row{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.25rem 0}
+.chip{padding:.4rem .9rem;border:2px solid var(--line);border-radius:var(--pill);background:var(--surface);font:700 .8rem var(--font-mono);box-shadow:2px 2px 0 var(--shadow)}
+
+/* ---------- Countdown ---------- */
+.countdown{display:flex;gap:.75rem;flex-wrap:wrap;margin:2rem 0}
+.countdown div{background:var(--surface);border:2px solid var(--line);border-radius:var(--r-md);box-shadow:4px 4px 0 var(--shadow);padding:.9rem 1.1rem;min-width:80px;text-align:center}
+.countdown b{display:block;font:700 clamp(1.6rem,3vw,2.2rem) var(--font-display)}
+.countdown span{font:600 .68rem var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.track-bounty{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1rem;padding-top:1rem;border-top:2px dashed var(--line);font:700 .82rem var(--font-mono)}

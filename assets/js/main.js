@@ -353,11 +353,28 @@
     });
   }
 
+  /* ---------- countdown ---------- */
+  function initCountdown() {
+    var box = $("[data-countdown]"); if (!box) return;
+    var iso = (CFG.hackathonDate || "").trim();
+    var els = { d: $("[data-cd-d]", box), h: $("[data-cd-h]", box), m: $("[data-cd-m]", box), s: $("[data-cd-s]", box) };
+    if (!iso) { box.closest(".countdown-wrap").querySelector(".cd-status").textContent = "Date to be announced — join the waitlist to hear first."; return; }
+    var target = new Date(iso).getTime();
+    function tick() {
+      var diff = target - Date.now();
+      if (diff <= 0) { box.closest(".countdown-wrap").querySelector(".cd-status").textContent = "It's happening now!"; return; }
+      var d = Math.floor(diff / 86400000), h = Math.floor(diff / 3600000) % 24, m = Math.floor(diff / 60000) % 60, s = Math.floor(diff / 1000) % 60;
+      els.d.textContent = d; els.h.textContent = String(h).padStart(2, "0"); els.m.textContent = String(m).padStart(2, "0"); els.s.textContent = String(s).padStart(2, "0");
+      requestAnimationFrame(function () { setTimeout(tick, 250); });
+    }
+    tick();
+  }
+
   /* ---------- boot ---------- */
   function boot() {
     var header = buildShell();
     initHeader(header); bindLinks(); initMarquee(); initForms();
-    initScroll(); heroIntro(); initMotion(); initPointer();
+    initScroll(); heroIntro(); initMotion(); initPointer(); initCountdown();
     if (!$("[data-split='hero']")) initTerminal();
     var go = function () {
       curtainOut(function () { if (window.ScrollTrigger) ScrollTrigger.refresh(); });

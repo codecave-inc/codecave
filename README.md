@@ -19,6 +19,8 @@ index.html              Homepage
 vercel.json             Clean URLs + cache/security headers
 assets/css/styles.css   Design system (3 themes via CSS variables)
 assets/js/config.js     ✏️ Nav, footer links, contact email, Google Form links
+assets/js/pricing-data.js ✏️ Pricing checker questions & tier prices (Website + Mobile)
+assets/js/pricing.js    Renders the pricing checker from pricing-data.js
 assets/js/main.js       Header/footer, themes, page transitions, scroll motion, form embeds
 assets/js/hero3d.js     Built 3D hero (source in src/hero3d.js)
 assets/vendor/          GSAP, ScrollTrigger, Lenis (self-hosted)
@@ -38,7 +40,7 @@ npx esbuild src/hero3d.js --bundle --minify --format=iife --outfile=assets/js/he
 
 ## Build stages
 - [x] **Stage 1** — Design system, themes, header/footer, page transitions, motion engine, form-embed component, homepage
-- [ ] **Stage 2** — Software solutions: Website Development (+ pricing checker), Mobile App Development (+ pricing checker), Automation Workflows
+- [x] **Stage 2** — Software solutions: Website Development (+ pricing checker), Mobile App Development (+ pricing checker), Automation Workflows
 - [ ] **Stage 3** — Learning: AI Utility Training, AI-Assisted Dev Training, Hackathon 27
 - [ ] **Stage 4** — Campus Ambassadors, Partnership Initiatives, Products, Sponsor Initiatives, Contact + FAQ
 - [ ] **Stage 5** — QA: accessibility, performance, SEO (sitemap, robots), final polish

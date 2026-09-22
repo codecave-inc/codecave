@@ -247,3 +247,49 @@ html[data-theme="dark"] .term{background:#060912}
   .marquee__track{animation:none}.js [data-reveal]{opacity:1;transform:none}
 }
 .drawer summary svg{width:22px;height:22px;flex:none}
+
+/* ---------- Inner page hero (non-3D pages) ---------- */
+.page-hero{position:relative;overflow:hidden;padding-block:clamp(3rem,7vw,5.5rem) clamp(3rem,6vw,4.5rem);background:linear-gradient(180deg,var(--bg) 0%,var(--bg-alt) 100%)}
+.crumb{display:flex;align-items:center;gap:.4rem;font:600 .82rem var(--font-mono);color:var(--muted);margin-bottom:1rem;flex-wrap:wrap}
+.crumb a{text-decoration:underline}
+.page-hero h1{max-width:16ch}
+.hero-meta{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem}
+.hero-meta div{display:flex;align-items:center;gap:.5rem;padding:.55rem .9rem;background:var(--surface);border:2px solid var(--line);border-radius:var(--r-sm);box-shadow:3px 3px 0 var(--shadow);font:600 .82rem var(--font-mono)}
+
+/* ---------- Portfolio ---------- */
+.portfolio-item{overflow:hidden;padding:0}
+.portfolio-item .thumb{aspect-ratio:16/10;background:linear-gradient(135deg,var(--bg-alt),var(--bg));border-bottom:2px solid var(--line);display:grid;place-items:center;font-size:2.2rem}
+.portfolio-item .pi-body{padding:1.25rem}
+.filter-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.75rem}
+.filter-chip{padding:.5rem 1rem;border:2px solid var(--line);border-radius:var(--pill);background:var(--surface);font:700 .82rem var(--font-mono);box-shadow:2px 2px 0 var(--shadow);transition:transform .2s var(--ease),background-color .2s}
+.filter-chip[aria-pressed="true"]{background:var(--lime);transform:translate(-1px,-1px)}
+.filter-chip:hover{transform:translate(-1px,-1px)}
+
+/* ---------- Pricing checker ---------- */
+.checker{display:grid;gap:clamp(1.5rem,3vw,2.5rem);align-items:start}
+@media(min-width:980px){.checker{grid-template-columns:1.15fr .85fr}}
+.q-group{margin-bottom:2rem}
+.q-group h3{display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem}
+.q-num{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;background:var(--ink-fixed);color:#fff;font:700 .85rem var(--font-mono);flex:none}
+.q-hint{color:var(--muted);font-size:.88rem;margin-bottom:1rem}
+.opt-grid{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.opt{position:relative;display:block;border:2px solid var(--line);border-radius:var(--r-md);background:var(--surface);padding:1rem 1rem 1rem 3rem;cursor:pointer;box-shadow:3px 3px 0 var(--shadow);transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s}
+.opt:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--shadow)}
+.opt input{position:absolute;left:1rem;top:1.2rem;width:1.15rem;height:1.15rem;accent-color:var(--lime)}
+.opt b{display:block;font:700 .95rem var(--font-display)}
+.opt span{display:block;font-size:.82rem;color:var(--muted);margin-top:.15rem}
+.opt:has(input:checked){border-color:var(--pink);box-shadow:5px 5px 0 var(--pink)}
+.opt-tag{position:absolute;top:-10px;right:10px;font:700 .65rem var(--font-mono);padding:.15rem .5rem;background:var(--lime);border:1.5px solid var(--ink-fixed);border-radius:var(--pill)}
+.result{position:sticky;top:calc(var(--header-h) + 1rem);background:var(--surface);border:2px solid var(--line);border-radius:var(--r-lg);box-shadow:6px 6px 0 var(--shadow);padding:1.5rem;overflow:hidden}
+.result__tag{font:700 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.result__tier{font:700 1.4rem var(--font-display);margin:.25rem 0 .75rem}
+.result__price{font:700 clamp(1.8rem,3.4vw,2.4rem) var(--font-display);color:var(--primary)}
+.result__desc{color:var(--ink-2);font-size:.92rem;margin:.5rem 0 1.25rem}
+.result__row{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-top:1.5px dashed var(--line);font-size:.88rem}
+.result__bar{height:10px;border-radius:99px;background:var(--bg);border:2px solid var(--line);margin:1rem 0;overflow:hidden}
+.result__bar i{display:block;height:100%;background:linear-gradient(90deg,var(--lime),var(--pink));width:20%;transition:width .5s var(--ease)}
+.result small{display:block;margin-top:1rem;color:var(--muted);font-size:.78rem}
+
+/* ---------- Pillars (automation) ---------- */
+.pillar{position:relative}
+.pillar .q-num{position:absolute;top:-14px;left:-14px;background:var(--pink);color:#fff}

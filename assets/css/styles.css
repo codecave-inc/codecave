@@ -322,3 +322,29 @@ html[data-theme="dark"] .term{background:#060912}
 .countdown b{display:block;font:700 clamp(1.6rem,3vw,2.2rem) var(--font-display)}
 .countdown span{font:600 .68rem var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .track-bounty{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1rem;padding-top:1rem;border-top:2px dashed var(--line);font:700 .82rem var(--font-mono)}
+
+/* ---------- Podium (sponsors) ---------- */
+.podium{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.podium .card{text-align:center}
+.podium .rank{display:inline-grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--lime);border:2px solid var(--line);font:700 1rem var(--font-mono);margin-bottom:.75rem}
+.podium .avatar{width:64px;height:64px;border-radius:50%;background:var(--bg);border:2px solid var(--line);display:grid;place-items:center;font:700 1.1rem var(--font-mono);margin:0 auto .75rem}
+.fund-bar{margin-top:.75rem}
+.fund-bar .result__bar{margin:.4rem 0}
+.pool-card{display:flex;flex-direction:column;gap:.5rem}
+.pool-card .pct{font:700 .78rem var(--font-mono);color:var(--muted)}
+
+/* ---------- FAQ ---------- */
+.faq{display:grid;gap:.75rem;max-width:52rem}
+.faq .week summary{font-size:.98rem}
+
+/* ---------- Contact channels ---------- */
+.chan{display:flex;flex-direction:column;gap:.4rem}
+.chan .sla{font:600 .78rem var(--font-mono);color:var(--pink)}
+
+/* ---------- Product detail rows ---------- */
+.product-detail{display:grid;gap:clamp(2rem,5vw,4rem);align-items:center;padding-block:clamp(2rem,5vw,3rem)}
+@media(min-width:900px){.product-detail{grid-template-columns:1fr 1fr}}
+.product-detail:nth-child(even) .pd-visual{order:2}
+.pd-visual{aspect-ratio:4/3;border-radius:var(--r-lg);border:2px solid var(--line);box-shadow:6px 6px 0 var(--shadow);display:grid;place-items:center;font-size:4rem;background:linear-gradient(135deg,var(--bg-alt),var(--surface))}
+.feat-row{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:1.25rem 0}
+.feat-row div{display:flex;align-items:center;gap:.5rem;font:600 .85rem var(--font-body);padding:.5rem .75rem;background:var(--surface);border:2px solid var(--line);border-radius:var(--r-sm)}

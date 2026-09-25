@@ -41,6 +41,14 @@ npm i three esbuild
 npx esbuild src/hero3d.js --bundle --minify --format=iife --outfile=assets/js/hero3d.js
 ```
 
+## Design refresh
+The UI moved from a playful "neo-tech" look (lime/pink, hard shadows, emoji) to a
+professional palette: sky blue + deep blue only, neutral black/white/gray, soft
+shadows, and a hand-rolled line-icon set (`assets/js/icons.js`, keyed by
+`data-icon="..."` and swapped for inline SVG at runtime). Backward-compatible
+CSS variables (`--lime`, `--pink`) still exist so old markup keeps working, but
+both now resolve to blue/ink tones instead of bright accent colors.
+
 ## Build stages
 - [x] **Stage 1** — Design system, themes, header/footer, page transitions, motion engine, form-embed component, homepage
 - [x] **Stage 2** — Software solutions: Website Development (+ pricing checker), Mobile App Development (+ pricing checker), Automation Workflows

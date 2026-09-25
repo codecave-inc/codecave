@@ -24,7 +24,7 @@ import {
 
   scene.add(new AmbientLight(0xffffff, 0.9));
   const sun = new DirectionalLight(0xffffff, 1.6); sun.position.set(4, 5, 6); scene.add(sun);
-  const rim = new PointLight(0xf43f5e, 30, 20); rim.position.set(-4, -2, 3); scene.add(rim);
+  const rim = new PointLight(0x0ea5e9, 26, 20); rim.position.set(-4, -2, 3); scene.add(rim);
 
   const edgeMat = new LineBasicMaterial({ color: 0x0f172a });
   const rig = new Group(); scene.add(rig);
@@ -33,7 +33,7 @@ import {
   core.add(new LineSegments(new EdgesGeometry(core.geometry), edgeMat));
   rig.add(core);
 
-  const shell = new LineSegments(new EdgesGeometry(new IcosahedronGeometry(2.05, 1)), new LineBasicMaterial({ color: 0xa3e635 }));
+  const shell = new LineSegments(new EdgesGeometry(new IcosahedronGeometry(2.05, 1)), new LineBasicMaterial({ color: 0x0369a1 }));
   rig.add(shell);
 
   function orbiter(geo, color, r, speed, tilt, size) {
@@ -44,8 +44,8 @@ import {
     return { pivot, m, speed };
   }
   const orbs = [
-    orbiter(new OctahedronGeometry(1), 0xa3e635, 2.9, 0.6, 0.5, 0.36),
-    orbiter(new TorusKnotGeometry(0.6, 0.2, 64, 8), 0xf43f5e, 3.3, -0.45, -0.7, 0.42),
+    orbiter(new OctahedronGeometry(1), 0x0369a1, 2.9, 0.6, 0.5, 0.36),
+    orbiter(new TorusKnotGeometry(0.6, 0.2, 64, 8), 0x64748b, 3.3, -0.45, -0.7, 0.42),
     orbiter(new BoxGeometry(1, 1, 1), 0xffffff, 2.6, 0.8, 1.1, 0.34),
     orbiter(new TorusGeometry(0.7, 0.18, 8, 24), 0x7dd3fc, 3.6, -0.35, 0.2, 0.4)
   ];

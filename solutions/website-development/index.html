@@ -102,11 +102,13 @@
 </main>
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/icons.js"></script>
+<script src="/assets/js/convex-client.js"></script>
 <script src="/assets/js/pricing-data.js"></script>
 <script src="/assets/vendor/gsap.min.js"></script>
 <script src="/assets/vendor/ScrollTrigger.min.js"></script>
 <script src="/assets/vendor/lenis.min.js"></script>
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/forms.js"></script>
 <script src="/assets/js/pricing.js"></script>
 <script>
 document.querySelectorAll(".filter-chip").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".filter-chip").forEach(function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");var f=b.dataset.filter;document.querySelectorAll("#pf-grid .portfolio-item").forEach(function(card){card.style.display=(f==="all"||card.dataset.tags.split(" ").indexOf(f)>-1)?"":"none"});});});

@@ -7,23 +7,11 @@ window.CODECAVE = {
   /* Hackathon 27 kickoff, ISO format "YYYY-MM-DDTHH:mm:ssZ". Leave "" until a date is set. */
   hackathonDate: "",
 
-  /* Google Forms embed links. Paste each form's "Send → Embed HTML" src URL
-     (looks like https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true).
-     Leave "" to show a friendly "coming soon" placeholder. */
-  forms: {
-    project:        "",   // Homepage — Tell us your project
-    aiUtility:      "",   // AI Utility Training onboarding
-    aiDev:          "",   // AI-Assisted Development Training onboarding
-    hackathon:      "",   // Hackathon 27 waitlist
-    website:        "",   // Website Development onboarding
-    mobile:         "",   // Mobile App Development onboarding
-    automation:     "",   // Automation Workflows onboarding
-    ambassador:     "",   // Campus Ambassador application
-    partner:        "",   // Partnership form
-    sponsor:        "",   // Sponsor form
-    productNotify:  "",   // Product "notify me"
-    contact:        ""    // Contact / questions
-  },
+  /* Your Convex deployment URL, e.g. "https://happy-otter-123.convex.cloud".
+     Get it by running `npx convex dev` (dev) or `npx convex deploy` (prod)
+     and copying the value it prints / puts in .env.local as CONVEX_URL.
+     Forms show a "warming up" placeholder until this is set. */
+  convexUrl: "",
 
   nav: [
     { label: "Learning Programs", items: [

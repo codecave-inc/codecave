@@ -310,26 +310,10 @@
   }
 
   /* ---------- Google Form embeds ---------- */
-  function initForms() {
-    $$("[data-form]").forEach(function (box) {
-      var key = box.dataset.form, url = (CFG.forms || {})[key] || "", title = box.dataset.title || "Form";
-      var body = $(".form-shell__body", box), foot = $(".form-shell__foot span", box);
-      if (!url) {
-        body.innerHTML = '<div class="form-shell__empty"><div style="font-size:2.5rem">🛠️</div><h3>This form is warming up</h3><p style="max-width:34ch;color:var(--ink-2)">We\'re finishing this form. In the meantime, email us at <a href="mailto:' + CFG.email + '" style="font-weight:700;text-decoration:underline">' + CFG.email + "</a>.</p></div>";
-        return;
-      }
-      var open = url.replace("embedded=true", "").replace(/[?&]$/, "");
-      if (foot) foot.innerHTML = 'Form not loading? <a href="' + open + '" target="_blank" rel="noopener">Open it in a new tab</a>';
-      var load = function () {
-        if (box.dataset.loaded) return; box.dataset.loaded = "1";
-        body.innerHTML = '<div class="skeleton"></div>';
-        var f = document.createElement("iframe"); f.src = url; f.title = title; f.loading = "lazy";
-        f.addEventListener("load", function () { f.classList.add("ready"); var s = $(".skeleton", body); if (s) s.remove(); });
-        body.appendChild(f);
-      };
-      if ("IntersectionObserver" in window) { var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { load(); io.disconnect(); } }, { rootMargin: "300px" }); io.observe(box); } else load();
-    });
-  }
+  // Form rendering moved to assets/js/forms.js (native forms wired to
+  // Convex). This function is kept as a no-op so the boot() call below
+  // doesn't need touching.
+  function initForms() {}
 
   /* ---------- hero intro (homepage) ---------- */
   function heroIntro() {

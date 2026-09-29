@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/portal-30ye9dy96d/:path*",
-      "destination": "https://codecave-admin.vercel.app/portal-30ye9dy96d/:path*"
+      "destination": "codecave-admin.vercel.app/portal-30ye9dy96d/:path*"
     }
   ],
   "headers": [

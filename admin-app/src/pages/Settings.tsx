@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 
 const KNOWN_KEYS = [
   { key: "hackathonDate", label: "Hackathon 27 date (ISO format)", placeholder: "2027-03-14T09:00:00Z" },

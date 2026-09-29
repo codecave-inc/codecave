@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import Submissions from "./Submissions";
 import Portfolio from "./Portfolio";
 import Sponsors from "./Sponsors";

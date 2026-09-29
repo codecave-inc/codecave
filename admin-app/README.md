@@ -17,7 +17,22 @@ cp .env.local.example .env.local
 Edit `.env.local` and set `VITE_CONVEX_URL` to your Convex deployment
 URL — the same one in the main site's `assets/js/config.js`.
 
-## 3. Create your admin account (one-time)
+## 3. Generate Convex Auth's signing keys (one-time, per deployment)
+Convex Auth needs a JWT key pair set as environment variables on the
+Convex deployment before any sign-in will work. From the **repo root**:
+```bash
+npx @convex-dev/auth
+```
+This sets `JWT_PRIVATE_KEY` and `JWKS` for you automatically and may
+ask for a `SITE_URL` (use your Vercel URL). It should detect the
+existing `convex/auth.ts` / `auth.config.ts` and not overwrite them —
+say no if it asks to regenerate those files.
+
+Run this once per Convex deployment — so once for `dev`, and again
+with `--prod` (or after switching your CLI to the prod deployment)
+before your first production sign-up.
+
+## 4. Create your admin account (one-time)
 There's no sign-up screen anywhere in the UI — that's intentional, so
 random visitors can't create accounts even if they find the URL.
 Instead, from the **repo root** (not admin-app/), with `npx convex dev`
@@ -26,6 +41,8 @@ running in another terminal:
 ```bash
 npx convex run auth:signIn '{"provider":"password","params":{"email":"you@example.com","password":"choose-a-strong-password","flow":"signUp"}}'
 ```
+> **Windows:** use PowerShell, not Command Prompt — `cmd.exe` mangles
+> the single quotes. In PowerShell the command above works as-is.
 This creates the account (but it has no admin access yet). Then grant
 it admin access:
 ```bash
@@ -41,13 +58,13 @@ npx convex run auth:signIn '{"provider":"password","params":{...}}' --prod
 npx convex run adminAuth:promoteToAdmin '{"email":"you@example.com"}' --prod
 ```
 
-## 4. Run it locally
+## 5. Run it locally
 ```bash
 npm run dev
 ```
 Open the printed localhost URL + `/portal-30ye9dy96d/` and sign in.
 
-## 5. Deploy
+## 6. Deploy
 This deploys as its **own, separate Vercel project** — it does not
 touch your existing CodeCave website project:
 

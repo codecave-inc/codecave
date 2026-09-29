@@ -102,21 +102,36 @@ convex/auth.config.ts, convex/http.ts   Convex Auth plumbing
 ```
 
 ### Creating your first admin login
-There's no public sign-up — that's intentional. Once the admin dashboard
-is built (next phase), you'll create your own account either from the
-Convex dashboard's Data tab or a one-off setup script. Nothing to do here
-yet.
+There's no public sign-up — that's intentional. See
+[`admin-app/README.md`](./admin-app/README.md) for the one-time bootstrap
+steps to create your account.
 
 ### Where form submissions show up
-Until the admin dashboard exists, view submissions in the
+Either in the admin dashboard (see below), or directly in the
 [Convex dashboard](https://dashboard.convex.dev) → your project → Data
 tab → pick a table (`projectBriefs`, `contactMessages`, etc.).
 
-### Admin dashboard (next phase)
-Planned as a separate, unguessable route (not linked from the public
-nav) — e.g. `/portal-<random-slug>` — gated behind Convex Auth, for full
-content management: portfolio items, sponsor wall, FAQ, pricing tiers,
-and browsing/triaging form submissions. Not built yet.
+## Admin dashboard
+
+A separate app at `admin-app/` for full content management (portfolio,
+sponsors, FAQ, pricing tiers) and reviewing/triaging form submissions.
+Gated behind Convex Auth (email + password, no public sign-up), served
+at an unguessable route (`/portal-30ye9dy96d`) not linked from anywhere
+public, and deployed as its own Vercel project so it can never affect
+the public site's deploys.
+
+**Setup, first admin account, and deployment steps:**
+see [`admin-app/README.md`](./admin-app/README.md).
+
+**Backend functions:** `convex/adminAuth.ts` (access control + the
+one-time bootstrap), `convex/adminContent.ts` (portfolio/sponsors/FAQ/
+pricing CRUD), `convex/adminSubmissions.ts` (list/triage all 8 form
+tables).
+
+**Known gap:** the dashboard can edit pricing tiers and site settings,
+but the public site doesn't read them from Convex yet — it still uses
+the hardcoded values in `assets/js/pricing-data.js` and `config.js`.
+Wiring that read path is a follow-up, not done yet.
 
 ## Build stages
 - [x] **Stage 1** — Design system, themes, header/footer, page transitions, motion engine, form-embed component, homepage

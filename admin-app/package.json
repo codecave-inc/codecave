@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel-build": "cd .. && npm install && cd admin-app && npm run build"
   },
   "dependencies": {
     "@convex-dev/auth": "^0.0.80",

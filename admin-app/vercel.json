@@ -1,8 +1,7 @@
 {
-  "redirects": [
-    { "source": "/portal-30ye9dy96d", "destination": "/portal-30ye9dy96d/", "permanent": false }
-  ],
   "rewrites": [
-    { "source": "/portal-30ye9dy96d/:path*", "destination": "/:path*" }
+    { "source": "/portal-30ye9dy96d/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/portal-30ye9dy96d", "destination": "/index.html" },
+    { "source": "/portal-30ye9dy96d/", "destination": "/index.html" }
   ]
 }

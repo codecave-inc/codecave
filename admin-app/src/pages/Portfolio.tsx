@@ -10,7 +10,7 @@ type Row = {
   tags: string[]; imageUrl?: string; linkUrl?: string; published: boolean; order: number;
 };
 
-const BLANK = { title: "", description: "", category: "website" as Row["category"], tags: "", imageUrl: "", linkUrl: "", published: false, order: 0 };
+const BLANK = { title: "", description: "", category: "website" as Row["category"], tags: [] as string[], imageUrl: "", linkUrl: "", published: false, order: 0 };
 
 export default function Portfolio() {
   const rows = useQuery(api.adminContent.listPortfolioAdmin, {}) as Row[] | undefined;

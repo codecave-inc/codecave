@@ -1,6 +1,5 @@
 .DS_Store
 node_modules/
-convex/_generated/
 .env.local
 admin-app/node_modules/
 admin-app/dist/

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 
-const KNOWN_KEYS = [
+const KNOWN_KEYS: { key: string; label: string; placeholder?: string }[] = [
   { key: "hackathonDate", label: "Hackathon 27 date (ISO format)", placeholder: "2027-03-14T09:00:00Z" },
   { key: "contactPhone", label: "Contact phone" },
   { key: "contactAddress", label: "Contact address" },
@@ -10,7 +10,7 @@ const KNOWN_KEYS = [
   { key: "homepageStatProducts", label: "Homepage stat — products shipped", placeholder: "25+" },
   { key: "homepageStatHubs", label: "Homepage stat — campus hubs", placeholder: "12+" },
   { key: "homepageStatSatisfaction", label: "Homepage stat — client satisfaction", placeholder: "99.8%" },
-] as const;
+];
 
 export default function Settings() {
   const rows = useQuery(api.adminContent.listSettingsAdmin, {});

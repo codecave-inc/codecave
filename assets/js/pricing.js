@@ -54,7 +54,19 @@
       var target = document.getElementById(cfg.formAnchor);
       if (target) { var note = target.querySelector("[data-tier-note]"); if (note) note.textContent = "Selected estimate: " + this.dataset.tier + ". Mention this in your form so we start from the right scope."; }
     });
-    if (window.gsap && root.querySelectorAll) { /* tilt/hooks are picked up automatically since .opt uses hover CSS only */ }
+
+    // Live overlay: the checker above is already fully usable with the
+    // static tiers from pricing-data.js. If the admin has since added
+    // tiers in Convex, swap them in seamlessly once they arrive —
+    // never block or flash a loading state for this.
+    if (window.CC_LIVE) {
+      window.CC_LIVE.loadPricingTiers(root.dataset.checker).then(function (liveTiers) {
+        if (liveTiers && liveTiers.length) {
+          cfg.tiers = liveTiers;
+          render();
+        }
+      });
+    }
   }
   document.querySelectorAll("[data-checker]").forEach(build);
 })();

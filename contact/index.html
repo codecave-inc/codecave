@@ -26,8 +26,10 @@
     <p class="lead" data-reveal>Questions about training, a project you want to build, or a partnership idea — reach out and we'll get back to you.</p>
     <div class="hero-meta" data-reveal>
       <div class="chan"><span class="icon" data-icon="mail"></span> <a href="mailto:support.codecave@gmail.com" style="font-weight:700">support.codecave@gmail.com</a></div>
+      <div class="chan" id="contact-phone-row" style="display:none"><span class="icon" data-icon="phone"></span> <a id="contact-phone-link" style="font-weight:700"></a></div>
+      <div class="chan" id="contact-address-row" style="display:none"><span class="icon" data-icon="home"></span> <span id="contact-address-text" style="font-weight:700"></span></div>
     </div>
-    <p style="margin-top:1rem;color:var(--muted);font-size:.9rem" data-reveal>Phone, physical address and social links will be added here once confirmed.</p>
+    <p id="contact-fallback-note" style="margin-top:1rem;color:var(--muted);font-size:.9rem" data-reveal>Phone, physical address and social links will be added here once confirmed.</p>
   </div>
 </section>
 
@@ -67,10 +69,30 @@
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/icons.js"></script>
 <script src="/assets/js/convex-client.js"></script>
+<script src="/assets/js/live-content.js"></script>
 <script src="/assets/vendor/gsap.min.js"></script>
 <script src="/assets/vendor/ScrollTrigger.min.js"></script>
 <script src="/assets/vendor/lenis.min.js"></script>
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/forms.js"></script>
+<script>
+(function () {
+  if (!window.CC_LIVE) return;
+  window.CC_LIVE.loadSetting("contactPhone").then(function (phone) {
+    if (!phone) return;
+    document.getElementById("contact-phone-row").style.display = "";
+    var link = document.getElementById("contact-phone-link");
+    link.href = "tel:" + phone.replace(/[^\d+]/g, "");
+    link.textContent = phone;
+    document.getElementById("contact-fallback-note").style.display = "none";
+  });
+  window.CC_LIVE.loadSetting("contactAddress").then(function (address) {
+    if (!address) return;
+    document.getElementById("contact-address-row").style.display = "";
+    document.getElementById("contact-address-text").textContent = address;
+    document.getElementById("contact-fallback-note").style.display = "none";
+  });
+})();
+</script>
 </body>
 </html>

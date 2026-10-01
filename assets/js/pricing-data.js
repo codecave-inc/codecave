@@ -23,9 +23,9 @@ window.CC_PRICING = {
         { value: "fast", weight: 2, label: "Fast-track", sub: "2–3 weeks, priority" } ] }
     ],
     tiers: [
-      { min: 0, name: "Starter", price: "$800 – $1,800", desc: "A focused, fast-loading site that gets you live quickly.", timeline: "2–3 weeks", stack: "Static/CMS build" },
-      { min: 4, name: "Growth", price: "$2,000 – $5,500", desc: "A fullstack build with accounts, payments or admin tooling.", timeline: "4–6 weeks", stack: "Fullstack web app" },
-      { min: 9, name: "Enterprise", price: "$6,000 – $15,000+", desc: "A multi-tenant platform engineered for scale and compliance.", timeline: "6–10 weeks", stack: "Custom architecture" }
+      { min: 0, name: "Starter", price: "₦100,000 – ₦200,000", desc: "A focused, fast-loading site that gets you live quickly.", timeline: "2–3 weeks", stack: "Static/CMS build" },
+      { min: 5, name: "Growth", price: "₦250,000 – ₦400,000", desc: "A fullstack build with accounts, payments or admin tooling.", timeline: "3–5 weeks", stack: "Fullstack web app" },
+      { min: 10, name: "Enterprise", price: "₦450,000 – ₦800,000+", desc: "A multi-tenant platform engineered for scale and compliance.", timeline: "5–7 weeks", stack: "Custom architecture" }
     ]
   },
   mobile: {
@@ -50,9 +50,9 @@ window.CC_PRICING = {
         { value: "fast", weight: 2, label: "Fast-track", sub: "3–4 weeks, priority" } ] }
     ],
     tiers: [
-      { min: 0, name: "Starter", price: "$1,500 – $3,000", desc: "A lean MVP on one platform to test your idea fast.", timeline: "3–4 weeks", stack: "Single platform" },
-      { min: 4, name: "Growth", price: "$3,500 – $8,000", desc: "A cross-platform app with real device features and store submission.", timeline: "5–8 weeks", stack: "Cross-platform + native bridges" },
-      { min: 10, name: "Enterprise", price: "$9,000 – $20,000+", desc: "A dual-native app for high-performance, multi-role experiences.", timeline: "8–12 weeks", stack: "Dual native architecture" }
+      { min: 0, name: "Starter", price: "₦150,000 – ₦250,000", desc: "A lean MVP on one platform to test your idea fast.", timeline: "3–4 weeks", stack: "Single platform" },
+      { min: 5, name: "Growth", price: "₦300,000 – ₦500,000", desc: "A cross-platform app with real device features and store submission.", timeline: "4–6 weeks", stack: "Cross-platform + native bridges" },
+      { min: 10, name: "Enterprise", price: "₦600,000 – ₦1,000,000+", desc: "A dual-native app for high-performance, multi-role experiences.", timeline: "6–8 weeks", stack: "Dual native architecture" }
     ]
   }
 };

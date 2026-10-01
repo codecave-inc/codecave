@@ -236,10 +236,13 @@
 
     // counters
     $$("[data-count]").forEach(function (el) {
-      var end = parseFloat(el.dataset.count), dec = (el.dataset.count.split(".")[1] || "").length, suf = el.dataset.suffix || "";
-      if (reduced) { el.textContent = end.toFixed(dec) + suf; return; }
+      if (reduced) { var end = parseFloat(el.dataset.count), dec = (el.dataset.count.split(".")[1] || "").length, suf = el.dataset.suffix || ""; el.textContent = end.toFixed(dec) + suf; return; }
       var o = { v: 0 };
       ScrollTrigger.create({ trigger: el, start: "top 92%", once: true, onEnter: function () {
+        // Read count/suffix NOW, not at setup time — lets the live-stats
+        // overlay below update these attributes any time before the
+        // user actually scrolls this into view.
+        var end = parseFloat(el.dataset.count), dec = (el.dataset.count.split(".")[1] || "").length, suf = el.dataset.suffix || "";
         gsap.to(o, { v: end, duration: 1.8, ease: "power2.out", onUpdate: function () { el.textContent = o.v.toFixed(dec) + suf; } });
       } });
     });
@@ -340,25 +343,63 @@
   /* ---------- countdown ---------- */
   function initCountdown() {
     var box = $("[data-countdown]"); if (!box) return;
-    var iso = (CFG.hackathonDate || "").trim();
+    var wrap = box.closest(".countdown-wrap");
     var els = { d: $("[data-cd-d]", box), h: $("[data-cd-h]", box), m: $("[data-cd-m]", box), s: $("[data-cd-s]", box) };
-    if (!iso) { box.closest(".countdown-wrap").querySelector(".cd-status").textContent = "Date to be announced — join the waitlist to hear first."; return; }
-    var target = new Date(iso).getTime();
-    function tick() {
-      var diff = target - Date.now();
-      if (diff <= 0) { box.closest(".countdown-wrap").querySelector(".cd-status").textContent = "It's happening now!"; return; }
-      var d = Math.floor(diff / 86400000), h = Math.floor(diff / 3600000) % 24, m = Math.floor(diff / 60000) % 60, s = Math.floor(diff / 1000) % 60;
-      els.d.textContent = d; els.h.textContent = String(h).padStart(2, "0"); els.m.textContent = String(m).padStart(2, "0"); els.s.textContent = String(s).padStart(2, "0");
-      requestAnimationFrame(function () { setTimeout(tick, 250); });
+    var timer = null;
+
+    function startTicking(iso) {
+      if (timer) clearTimeout(timer);
+      var target = new Date(iso).getTime();
+      if (isNaN(target)) { showStatus("Date to be announced — join the waitlist to hear first."); return; }
+      function tick() {
+        var diff = target - Date.now();
+        if (diff <= 0) { showStatus("It's happening now!"); return; }
+        var d = Math.floor(diff / 86400000), h = Math.floor(diff / 3600000) % 24, m = Math.floor(diff / 60000) % 60, s = Math.floor(diff / 1000) % 60;
+        els.d.textContent = d; els.h.textContent = String(h).padStart(2, "0"); els.m.textContent = String(m).padStart(2, "0"); els.s.textContent = String(s).padStart(2, "0");
+        wrap.querySelector(".cd-status").textContent = "";
+        timer = setTimeout(tick, 250);
+      }
+      tick();
     }
-    tick();
+    function showStatus(text) { if (timer) clearTimeout(timer); wrap.querySelector(".cd-status").textContent = text; }
+
+    var iso = (CFG.hackathonDate || "").trim();
+    if (iso) startTicking(iso); else showStatus("Date to be announced — join the waitlist to hear first.");
+
+    // Live overlay: if the admin has set a date in Convex, it wins over
+    // the static config.js value once it arrives.
+    if (window.CC_LIVE) {
+      window.CC_LIVE.loadSetting("hackathonDate").then(function (liveDate) {
+        if (liveDate) startTicking(liveDate);
+      });
+    }
+  }
+
+  /* ---------- live homepage stats ---------- */
+  function applyLiveStats() {
+    if (!window.CC_LIVE) return;
+    $$("[data-stat-key]").forEach(function (el) {
+      window.CC_LIVE.loadSetting(el.dataset.statKey).then(function (value) {
+        if (!value) return;
+        var m = String(value).match(/^([\d.]+)(.*)$/);
+        if (!m) return;
+        el.dataset.count = m[1];
+        el.dataset.suffix = m[2] || "";
+        // Reflect it immediately too, in case this already rendered
+        // statically (reduced-motion users) or the scroll animation
+        // already fired before this arrived. Harmless either way —
+        // if the animation hasn't fired yet, it'll just animate to
+        // this same value when it does.
+        el.textContent = Number(m[1]).toFixed((m[1].split(".")[1] || "").length) + (m[2] || "");
+      });
+    });
   }
 
   /* ---------- boot ---------- */
   function boot() {
     var header = buildShell();
     initHeader(header); bindLinks(); initMarquee(); initForms();
-    initScroll(); heroIntro(); initMotion(); initPointer(); initCountdown();
+    initScroll(); heroIntro(); initMotion(); initPointer(); initCountdown(); applyLiveStats();
     if (!$("[data-split='hero']")) initTerminal();
     var go = function () {
       curtainOut(function () { if (window.ScrollTrigger) ScrollTrigger.refresh(); });

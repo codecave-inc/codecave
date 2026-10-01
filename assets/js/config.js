@@ -11,10 +11,7 @@ window.CODECAVE = {
      Get it by running `npx convex dev` (dev) or `npx convex deploy` (prod)
      and copying the value it prints / puts in .env.local as CONVEX_URL.
      Forms show a "warming up" placeholder until this is set. */
-<<<<<<< HEAD
-=======
-   
->>>>>>> dc1c0e5ae14ec459fef6d26d81abd34b26b1b752
+
   convexUrl: "https://rightful-chickadee-186.convex.cloud",
 
   nav: [

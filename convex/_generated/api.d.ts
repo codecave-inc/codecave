@@ -13,6 +13,7 @@ import type * as adminContent from "../adminContent.js";
 import type * as adminSubmissions from "../adminSubmissions.js";
 import type * as auth from "../auth.js";
 import type * as content from "../content.js";
+import type * as email from "../email.js";
 import type * as forms from "../forms.js";
 import type * as http from "../http.js";
 
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   adminSubmissions: typeof adminSubmissions;
   auth: typeof auth;
   content: typeof content;
+  email: typeof email;
   forms: typeof forms;
   http: typeof http;
 }>;

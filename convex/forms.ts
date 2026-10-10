@@ -1,4 +1,5 @@
 import { mutation } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
 /**
@@ -10,7 +11,12 @@ import { v } from "convex/values";
  * All of these are callable from the public internet (no auth) since
  * they're just "someone filled in a form" — that's expected. Reading
  * them back (for the admin dashboard) is a separate, auth-gated set
- * of functions in convex/admin.ts (added in the dashboard phase).
+ * of functions in convex/admin*.ts.
+ *
+ * Right after saving, each mutation schedules the email action
+ * (convex/email.ts) to send a "thanks" email to the visitor and a
+ * notification to the team. Scheduled rather than awaited, so a slow
+ * or failed email never delays or breaks the form submission itself.
  */
 
 export const submitProjectBrief = mutation({
@@ -30,11 +36,27 @@ export const submitProjectBrief = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("projectBriefs", {
+    const id = await ctx.db.insert("projectBriefs", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.name,
+      formLabel: "Project Brief",
+      fields: [
+        { label: "Name", value: args.name },
+        { label: "Email", value: args.email },
+        { label: "Project type", value: args.projectType },
+        { label: "Budget range", value: args.budgetRange || "—" },
+        { label: "Timeline", value: args.timeline || "—" },
+        { label: "Estimate selected", value: args.tierEstimate || "—" },
+        { label: "Details", value: args.details },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -50,11 +72,26 @@ export const submitTrainingApplication = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("trainingApplications", {
+    const id = await ctx.db.insert("trainingApplications", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.fullName,
+      formLabel: args.program === "ai_utility" ? "AI Utility Training Application" : "AI-Assisted Dev Training Application",
+      fields: [
+        { label: "Full name", value: args.fullName },
+        { label: "Email", value: args.email },
+        { label: "Track", value: args.track },
+        { label: "Organisation", value: args.organisation || "—" },
+        { label: "Cohort size", value: args.cohortSize ? String(args.cohortSize) : "—" },
+        { label: "Notes", value: args.notes || "—" },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -68,11 +105,25 @@ export const submitHackathonWaitlist = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("hackathonWaitlist", {
+    const id = await ctx.db.insert("hackathonWaitlist", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.fullName,
+      formLabel: "Hackathon 27 Waitlist Signup",
+      fields: [
+        { label: "Full name", value: args.fullName },
+        { label: "Email", value: args.email },
+        { label: "Role", value: args.role },
+        { label: "School / organisation", value: args.school || "—" },
+        { label: "Notes", value: args.notes || "—" },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -87,11 +138,26 @@ export const submitAmbassadorApplication = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("ambassadorApplications", {
+    const id = await ctx.db.insert("ambassadorApplications", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.fullName,
+      formLabel: "Campus Ambassador Application",
+      fields: [
+        { label: "Full name", value: args.fullName },
+        { label: "Email", value: args.email },
+        { label: "School", value: args.school },
+        { label: "Graduation year", value: args.graduationYear ? String(args.graduationYear) : "—" },
+        { label: "Why them", value: args.whyYou },
+        { label: "Links / portfolio", value: args.linksOrPortfolio || "—" },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -111,11 +177,25 @@ export const submitPartnershipProposal = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("partnershipProposals", {
+    const id = await ctx.db.insert("partnershipProposals", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.contactName,
+      formLabel: "Partnership Proposal",
+      fields: [
+        { label: "Contact name", value: args.contactName },
+        { label: "Email", value: args.email },
+        { label: "Organisation", value: args.organisation },
+        { label: "Partnership type", value: args.partnershipType },
+        { label: "Details", value: args.details },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -130,11 +210,26 @@ export const submitSponsorInquiry = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("sponsorInquiries", {
+    const id = await ctx.db.insert("sponsorInquiries", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.contactName,
+      formLabel: "Sponsor Inquiry",
+      fields: [
+        { label: "Contact name", value: args.contactName },
+        { label: "Email", value: args.email },
+        { label: "Organisation", value: args.organisation || "—" },
+        { label: "Sponsor type", value: args.sponsorType },
+        { label: "Initiative", value: args.initiative || "—" },
+        { label: "Details", value: args.details || "—" },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -150,11 +245,22 @@ export const submitProductNotify = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("productNotify", {
+    const id = await ctx.db.insert("productNotify", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.email,
+      formLabel: "Product Notify-Me Signup",
+      fields: [
+        { label: "Email", value: args.email },
+        { label: "Product", value: args.product },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });
 
@@ -167,10 +273,23 @@ export const submitContactMessage = mutation({
     source: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("contactMessages", {
+    const id = await ctx.db.insert("contactMessages", {
       ...args,
       submittedAt: Date.now(),
       status: "new",
     });
+    await ctx.scheduler.runAfter(0, internal.email.sendFormEmails, {
+      visitorEmail: args.email,
+      visitorName: args.fullName,
+      formLabel: "Contact Message",
+      fields: [
+        { label: "Full name", value: args.fullName },
+        { label: "Email", value: args.email },
+        { label: "Subject", value: args.subject || "—" },
+        { label: "Message", value: args.message },
+        { label: "Submitted from", value: args.source || "—" },
+      ],
+    });
+    return id;
   },
 });

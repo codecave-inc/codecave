@@ -9,20 +9,27 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
 
   // ---- field helpers ----------------------------------------------------
+  var AUTOCOMPLETE_BY_NAME = { name: "name", fullName: "name", contactName: "name", organisation: "organization", school: "organization" };
+  function autocompleteFor(f) {
+    if (f.type === "email") return "email";
+    return AUTOCOMPLETE_BY_NAME[f.name] || "";
+  }
   function field(f) {
     var id = "f_" + f.name;
     var req = f.required ? " required" : "";
+    var ac = autocompleteFor(f);
+    var acAttr = ac ? ' autocomplete="' + ac + '"' : "";
     var label = '<label for="' + id + '">' + f.label + (f.required ? ' <span aria-hidden="true">*</span>' : "") + "</label>";
     var input;
     if (f.type === "select") {
-      input = '<select id="' + id + '" name="' + f.name + '"' + req + ">" +
+      input = '<select id="' + id + '" name="' + f.name + '"' + req + acAttr + ">" +
         (f.placeholder ? '<option value="" disabled selected>' + f.placeholder + "</option>" : "") +
         f.options.map(function (o) { return '<option value="' + o[0] + '">' + o[1] + "</option>"; }).join("") +
         "</select>";
     } else if (f.type === "textarea") {
-      input = '<textarea id="' + id + '" name="' + f.name + '" rows="' + (f.rows || 4) + '"' + req + (f.placeholder ? ' placeholder="' + f.placeholder + '"' : "") + "></textarea>";
+      input = '<textarea id="' + id + '" name="' + f.name + '" rows="' + (f.rows || 4) + '"' + req + acAttr + (f.placeholder ? ' placeholder="' + f.placeholder + '"' : "") + "></textarea>";
     } else {
-      input = '<input id="' + id + '" name="' + f.name + '" type="' + (f.type || "text") + '"' + req + (f.placeholder ? ' placeholder="' + f.placeholder + '"' : "") + (f.min != null ? ' min="' + f.min + '"' : "") + ">";
+      input = '<input id="' + id + '" name="' + f.name + '" type="' + (f.type || "text") + '"' + req + acAttr + (f.placeholder ? ' placeholder="' + f.placeholder + '"' : "") + (f.min != null ? ' min="' + f.min + '"' : "") + ">";
     }
     return '<div class="fld' + (f.wide ? " fld--wide" : "") + '">' + label + input + '<p class="fld__err" role="alert"></p></div>';
   }

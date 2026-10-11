@@ -1,2 +1,4 @@
 User-agent: *
-Sitemap: https://codecave.com/sitemap.xml
+Allow: /
+
+Sitemap: https://codecave.com.ng/sitemap.xml

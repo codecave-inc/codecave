@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens — same palette as codecave.com.ng. Values are space-separated
+   RGB so Tailwind can apply opacity (e.g. bg-primary/10). Three themes. */
+:root,
+:root[data-theme="normal"] {
+  --bg: 245 249 252; --bg-alt: 234 242 248; --surface: 255 255 255;
+  --ink: 16 24 40; --ink-2: 71 84 103; --muted: 90 107 130; --line: 208 217 226;
+  --primary: 3 105 161; --primary-2: 14 165 233; --on-primary: 255 255 255;
+  --danger: 200 30 30; --success: 21 128 61; --navy: 15 23 42;
+}
+:root[data-theme="bright"] {
+  --bg: 255 255 255; --bg-alt: 248 250 252; --surface: 255 255 255;
+  --ink: 15 23 42; --ink-2: 71 84 103; --muted: 90 107 130; --line: 226 232 240;
+  --primary: 2 132 199; --primary-2: 14 165 233; --on-primary: 255 255 255;
+  --danger: 200 30 30; --success: 21 128 61; --navy: 15 23 42;
+}
+:root[data-theme="dark"] {
+  --bg: 10 14 20; --bg-alt: 18 22 31; --surface: 22 27 38;
+  --ink: 245 247 250; --ink-2: 183 194 208; --muted: 136 150 166; --line: 37 43 56;
+  --primary: 56 189 248; --primary-2: 125 211 252; --on-primary: 8 47 73;
+  --danger: 248 113 113; --success: 74 222 128; --navy: 6 9 17;
+}
+
+@layer base {
+  html { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  h1, h2, h3 { @apply font-display font-semibold tracking-tight; }
+  :focus-visible { outline: 2px solid rgb(var(--primary-2)); outline-offset: 2px; }
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-sm border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted/70
+           transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25
+           disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .input[aria-invalid="true"] { @apply border-danger focus:ring-danger/25; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 font-semibold transition
+           disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary { @apply bg-primary text-on-primary shadow-sm hover:brightness-110 active:brightness-95; }
+  .btn-outline { @apply border border-line bg-surface text-ink hover:bg-bg-alt; }
+  .link { @apply font-semibold text-primary underline-offset-2 hover:underline; }
+}
+
+/* Calm entrance for auth cards (respects reduced motion). */
+@media (prefers-reduced-motion: no-preference) {
+  .rise { animation: rise .5s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}

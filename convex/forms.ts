@@ -1,6 +1,8 @@
 import { mutation } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
+import { cleanEmail, cleanOptionalInt, cleanOptionalText, cleanText } from "./validation";
+import { limitFormSubmission } from "./rateLimits";
 
 /**
  * Public mutations — one per form on the site. Each is intentionally
@@ -12,6 +14,11 @@ import { v } from "convex/values";
  * they're just "someone filled in a form" — that's expected. Reading
  * them back (for the admin dashboard) is a separate, auth-gated set
  * of functions in convex/admin*.ts.
+ *
+ * Because they're public, every one cleans and length-limits its input
+ * (convex/validation.ts) and is rate-limited per email address and
+ * globally (convex/rateLimits.ts) — otherwise a form could be used to
+ * flood a victim's inbox from our sender address.
  *
  * Right after saving, each mutation schedules the email action
  * (convex/email.ts) to send a "thanks" email to the visitor and a
@@ -35,7 +42,18 @@ export const submitProjectBrief = mutation({
     tierEstimate: v.optional(v.string()),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      name: cleanText(raw.name, "Name", 120),
+      email: cleanEmail(raw.email),
+      budgetRange: cleanOptionalText(raw.budgetRange, "Budget range", 200),
+      timeline: cleanOptionalText(raw.timeline, "Timeline", 200),
+      details: cleanText(raw.details, "Details", 5000),
+      tierEstimate: cleanOptionalText(raw.tierEstimate, "Estimate", 200),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("projectBriefs", {
       ...args,
       submittedAt: Date.now(),
@@ -71,7 +89,18 @@ export const submitTrainingApplication = mutation({
     notes: v.optional(v.string()),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      track: cleanText(raw.track, "Track", 100),
+      fullName: cleanText(raw.fullName, "Full name", 120),
+      email: cleanEmail(raw.email),
+      organisation: cleanOptionalText(raw.organisation, "Organisation", 200),
+      cohortSize: cleanOptionalInt(raw.cohortSize, "Cohort size", 1, 100000),
+      notes: cleanOptionalText(raw.notes, "Notes", 2000),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("trainingApplications", {
       ...args,
       submittedAt: Date.now(),
@@ -104,7 +133,16 @@ export const submitHackathonWaitlist = mutation({
     notes: v.optional(v.string()),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      fullName: cleanText(raw.fullName, "Full name", 120),
+      email: cleanEmail(raw.email),
+      school: cleanOptionalText(raw.school, "School / organisation", 200),
+      notes: cleanOptionalText(raw.notes, "Notes", 2000),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("hackathonWaitlist", {
       ...args,
       submittedAt: Date.now(),
@@ -137,7 +175,18 @@ export const submitAmbassadorApplication = mutation({
     linksOrPortfolio: v.optional(v.string()),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      fullName: cleanText(raw.fullName, "Full name", 120),
+      email: cleanEmail(raw.email),
+      school: cleanText(raw.school, "School", 200),
+      graduationYear: cleanOptionalInt(raw.graduationYear, "Graduation year", 1950, 2100),
+      whyYou: cleanText(raw.whyYou, "Your answer", 3000),
+      linksOrPortfolio: cleanOptionalText(raw.linksOrPortfolio, "Links / portfolio", 1000),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("ambassadorApplications", {
       ...args,
       submittedAt: Date.now(),
@@ -176,7 +225,16 @@ export const submitPartnershipProposal = mutation({
     details: v.string(),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      contactName: cleanText(raw.contactName, "Contact name", 120),
+      email: cleanEmail(raw.email),
+      organisation: cleanText(raw.organisation, "Organisation", 200),
+      details: cleanText(raw.details, "Details", 5000),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("partnershipProposals", {
       ...args,
       submittedAt: Date.now(),
@@ -209,7 +267,17 @@ export const submitSponsorInquiry = mutation({
     details: v.optional(v.string()),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      contactName: cleanText(raw.contactName, "Contact name", 120),
+      email: cleanEmail(raw.email),
+      organisation: cleanOptionalText(raw.organisation, "Organisation", 200),
+      initiative: cleanOptionalText(raw.initiative, "Initiative", 200),
+      details: cleanOptionalText(raw.details, "Details", 5000),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("sponsorInquiries", {
       ...args,
       submittedAt: Date.now(),
@@ -244,7 +312,13 @@ export const submitProductNotify = mutation({
     ),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      email: cleanEmail(raw.email),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("productNotify", {
       ...args,
       submittedAt: Date.now(),
@@ -272,7 +346,16 @@ export const submitContactMessage = mutation({
     message: v.string(),
     source: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, raw) => {
+    const args = {
+      ...raw,
+      fullName: cleanText(raw.fullName, "Full name", 120),
+      email: cleanEmail(raw.email),
+      subject: cleanOptionalText(raw.subject, "Subject", 200),
+      message: cleanText(raw.message, "Message", 5000),
+      source: cleanOptionalText(raw.source, "Source", 200),
+    };
+    await limitFormSubmission(ctx, args.email);
     const id = await ctx.db.insert("contactMessages", {
       ...args,
       submittedAt: Date.now(),

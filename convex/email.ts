@@ -1,5 +1,6 @@
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
+import { ADMIN_EMAIL, SENDER_NAME, escapeHtml, sendBrevoEmail } from "./brevo";
 
 /**
  * Sends the two transactional emails for every form submission, via
@@ -14,18 +15,6 @@ import { v } from "convex/values";
  * still save to the database either way.
  */
 
-const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
-const ADMIN_EMAIL = "support.codecave@gmail.com";
-const SENDER_NAME = "CodeCave Inc.";
-
-function escapeHtml(s: string): string {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 function fieldsToHtml(fields: { label: string; value: string }[]): string {
   return fields
     .map(
@@ -33,18 +22,6 @@ function fieldsToHtml(fields: { label: string; value: string }[]): string {
         `<tr><td style="padding:4px 14px 4px 0;color:#64748B;font-weight:600;vertical-align:top;white-space:nowrap">${escapeHtml(f.label)}</td><td style="padding:4px 0">${escapeHtml(f.value)}</td></tr>`
     )
     .join("");
-}
-
-async function sendBrevoEmail(apiKey: string, payload: Record<string, unknown>) {
-  const res = await fetch(BREVO_API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json", "api-key": apiKey },
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Brevo API error ${res.status}: ${text}`);
-  }
 }
 
 export const sendFormEmails = internalAction({

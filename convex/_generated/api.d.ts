@@ -12,10 +12,18 @@ import type * as adminAuth from "../adminAuth.js";
 import type * as adminContent from "../adminContent.js";
 import type * as adminSubmissions from "../adminSubmissions.js";
 import type * as auth from "../auth.js";
+import type * as authEmails from "../authEmails.js";
+import type * as brevo from "../brevo.js";
 import type * as content from "../content.js";
 import type * as email from "../email.js";
 import type * as forms from "../forms.js";
 import type * as http from "../http.js";
+import type * as permissions from "../permissions.js";
+import type * as profiles from "../profiles.js";
+import type * as rateLimits from "../rateLimits.js";
+import type * as staff from "../staff.js";
+import type * as studentSignup from "../studentSignup.js";
+import type * as validation from "../validation.js";
 
 import type {
   ApiFromModules,
@@ -28,10 +36,18 @@ declare const fullApi: ApiFromModules<{
   adminContent: typeof adminContent;
   adminSubmissions: typeof adminSubmissions;
   auth: typeof auth;
+  authEmails: typeof authEmails;
+  brevo: typeof brevo;
   content: typeof content;
   email: typeof email;
   forms: typeof forms;
   http: typeof http;
+  permissions: typeof permissions;
+  profiles: typeof profiles;
+  rateLimits: typeof rateLimits;
+  staff: typeof staff;
+  studentSignup: typeof studentSignup;
+  validation: typeof validation;
 }>;
 
 /**
@@ -60,4 +76,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
+};

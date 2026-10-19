@@ -59,6 +59,9 @@ export const listPricingTiers = query({
 export const getSetting = query({
   args: { key: v.string() },
   handler: async (ctx, { key }) => {
+    // Public query: settings whose key starts with "private." are for
+    // admin use only and are never served here.
+    if (key.startsWith("private.")) return null;
     const row = await ctx.db
       .query("siteSettings")
       .withIndex("by_key", (q) => q.eq("key", key))

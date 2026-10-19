@@ -1,0 +1,1 @@
+{ "extends": "../convex/tsconfig.json", "compilerOptions": { "types": ["vite/client", "node"], "noEmit": true }, "include": ["./**/*.ts", "../convex/**/*.ts"], "exclude": [] }

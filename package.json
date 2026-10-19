@@ -2,18 +2,24 @@
   "name": "codecave-website",
   "version": "1.0.0",
   "private": true,
-  "description": "CodeCave Inc. website — static frontend + Convex backend",
+  "description": "CodeCave Inc. website \u2014 static frontend + Convex backend",
   "scripts": {
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
-    "dev": "npx serve . -l 3000"
+    "dev": "npx serve . -l 3000",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@auth/core": "^0.37.0",
     "@convex-dev/auth": "^0.0.80",
+    "@convex-dev/rate-limiter": "^0.4.2",
     "convex": "^1.24.0"
   },
   "devDependencies": {
+    "@edge-runtime/vm": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "convex-test": "^0.0.61",
     "typescript": "^5.6.0",
-    "@types/node": "^22.0.0"
+    "vitest": "^5.0.4"
   }
 }

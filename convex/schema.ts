@@ -14,6 +14,21 @@ import { v } from "convex/values";
  * dashboard needs to triage/filter.
  */
 
+/**
+ * Staff roles (stored in adminProfiles — NEVER on the shared users
+ * table, so a student account can't acquire one by accident).
+ *  - owner:      Super Admin. Everything, including team management.
+ *  - editor:     Site editor. Public-site content + form submissions.
+ *  - instructor: LMS course content and grading (LMS admin, later phases).
+ *  - moderator:  LMS comment / community moderation (later phases).
+ */
+export const staffRole = v.union(
+  v.literal("owner"),
+  v.literal("editor"),
+  v.literal("instructor"),
+  v.literal("moderator")
+);
+
 const submissionMeta = {
   submittedAt: v.number(),
   status: v.union(v.literal("new"), v.literal("read"), v.literal("archived")),
@@ -179,7 +194,39 @@ export default defineSchema({
   // ---------------------------------------------------------------
   adminProfiles: defineTable({
     userId: v.id("users"), // Convex Auth's users table
-    role: v.union(v.literal("owner"), v.literal("editor")),
+    role: staffRole,
     addedAt: v.number(),
   }).index("by_userId", ["userId"]),
+
+  // ---------------------------------------------------------------
+  // CodeCave Academy (LMS) — learner profile. One row per student
+  // user. Stable identity/consent data only; high-churn data (XP,
+  // streaks, progress) gets its own tables in later phases.
+  // ---------------------------------------------------------------
+  profiles: defineTable({
+    userId: v.id("users"),
+    country: v.optional(v.string()),
+    // We store a band, not a date of birth: enough to enforce the 16+
+    // rule and the guardian-permission rule for 16-17, nothing more.
+    ageBand: v.optional(v.union(v.literal("16-17"), v.literal("18+"))),
+    guardianConsent: v.optional(v.boolean()),
+    termsAcceptedAt: v.optional(v.number()),
+    conductAcceptedAt: v.optional(v.number()),
+    // Set once age/terms/code-of-conduct are confirmed. Google sign-ins
+    // start without it and are sent to a "complete your profile" step.
+    signupCompletedAt: v.optional(v.number()),
+    createdAt: v.number(),
+  }).index("by_userId", ["userId"]),
+
+  // ---------------------------------------------------------------
+  // Audit trail for security-relevant admin actions (role changes,
+  // account creation, deleting people's submissions).
+  // ---------------------------------------------------------------
+  auditLog: defineTable({
+    actorId: v.optional(v.id("users")), // absent for CLI / system actions
+    action: v.string(), // e.g. "staff.role_set"
+    target: v.optional(v.string()),
+    detail: v.optional(v.string()),
+    createdAt: v.number(),
+  }).index("by_createdAt", ["createdAt"]),
 });

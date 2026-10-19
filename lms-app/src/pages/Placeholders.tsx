@@ -26,3 +26,15 @@ export function NotFound() {
     </div>
   );
 }
+
+/** Same message as NotFound, for use inside the signed-in shell. */
+export function NotFoundBody() {
+  return (
+    <main className="mx-auto max-w-md px-5 py-24 text-center">
+      <p className="font-mono text-sm text-primary">404</p>
+      <h1 className="mt-2 text-3xl">We couldn't find that</h1>
+      <p className="mt-3 text-ink-2">It may have moved, or it isn't open yet.</p>
+      <Link to="/" className="btn btn-primary mt-8">Go home</Link>
+    </main>
+  );
+}

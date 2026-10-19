@@ -4,7 +4,7 @@ import { internal } from "./_generated/api";
 import { internalAction, internalMutation, query } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { staffRole } from "./schema";
-import { SITE_ROLES, getStaffProfile, logAudit, requireRole } from "./permissions";
+import { CONTENT_ROLES, SITE_ROLES, getStaffProfile, logAudit, requireRole } from "./permissions";
 
 /**
  * Call at the top of every site-admin query/mutation:
@@ -30,6 +30,7 @@ export const whoAmI = query({
       email: user?.email ?? null,
       role: profile.role,
       canManageSite: SITE_ROLES.includes(profile.role),
+      canManageContent: CONTENT_ROLES.includes(profile.role),
       canManageTeam: profile.role === "owner",
     };
   },

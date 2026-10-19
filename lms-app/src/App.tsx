@@ -1,5 +1,9 @@
 import { Route, Routes } from "react-router-dom";
+import { AppShell } from "./components/AppShell";
 import { Guards } from "./components/Guards";
+import CoursePage from "./pages/CoursePage";
+import SetupGuide from "./pages/SetupGuide";
+import Utility from "./pages/Utility";
 import CompleteProfile from "./pages/CompleteProfile";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -21,7 +25,12 @@ export default function App() {
       <Route path="/complete-profile" element={<CompleteProfile />} />
 
       <Route element={<Guards.RequireLearner />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route element={<AppShell />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/utility" element={<Utility />} />
+          <Route path="/courses/:slug" element={<CoursePage />} />
+          <Route path="/courses/:slug/setup" element={<SetupGuide />} />
+        </Route>
       </Route>
 
       <Route path="/terms" element={<LegalPlaceholder title="Terms of Service" />} />

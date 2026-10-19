@@ -192,6 +192,83 @@ export default defineSchema({
   // Convex Auth manages its own internal tables automatically;
   // this table is for app-level role info layered on top.
   // ---------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // Academy content (Phase 2). Edited by staff in the admin portal;
+  // students read it through convex/courses.ts, which never exposes
+  // drafts or the instructor-only fields.
+  // ---------------------------------------------------------------
+  courses: defineTable({
+    slug: v.string(),
+    title: v.string(),
+    type: v.union(v.literal("focused"), v.literal("utility")),
+    status: v.union(v.literal("draft"), v.literal("published"), v.literal("coming_soon")),
+    tagline: v.optional(v.string()),
+    description: v.string(),
+    thumbnailUrl: v.optional(v.string()),
+    recommendedOrder: v.number(),
+    // "Before Module 1" checklist, editable without redeploying.
+    setupGuide: v.optional(v.array(v.object({ id: v.string(), title: v.string(), detail: v.string() }))),
+    createdAt: v.number(),
+  }).index("by_slug", ["slug"]).index("by_status", ["status"]),
+
+  modules: defineTable({
+    courseId: v.id("courses"),
+    number: v.number(),
+    title: v.string(),
+    outcome: v.optional(v.string()),
+    order: v.number(),
+  }).index("by_courseId", ["courseId", "order"]),
+
+  lessons: defineTable({
+    courseId: v.id("courses"),
+    moduleId: v.optional(v.id("modules")), // utility-course lessons have no module
+    number: v.number(),
+    order: v.number(),
+    title: v.string(),
+    status: v.union(v.literal("draft"), v.literal("published"), v.literal("coming_soon")),
+    isFreePreview: v.boolean(),
+    summary: v.string(),
+    youtubeVideoId: v.optional(v.string()),
+    durationSec: v.number(),
+    objectives: v.array(v.string()),
+    keyConcepts: v.array(v.string()),
+    notesMd: v.string(),
+    promptCards: v.array(v.object({ title: v.string(), prompt: v.string() })),
+    taskMd: v.string(),
+    pitfalls: v.array(v.string()),
+    chapters: v.array(v.object({ startSec: v.number(), title: v.string() })),
+    tools: v.array(v.string()),
+    studentOutput: v.string(),
+    evidenceMd: v.string(), // what the student submits (assessments come in Phase 5)
+    assetsNote: v.string(),
+    resources: v.array(v.object({ title: v.string(), url: v.string() })),
+    // Instructor-only: never returned by student-facing queries.
+    recordingFlow: v.array(v.string()),
+    lastVerifiedAt: v.optional(v.number()),
+  })
+    .index("by_courseId", ["courseId", "order"])
+    .index("by_moduleId", ["moduleId", "order"]),
+
+  transcriptChunks: defineTable({
+    lessonId: v.id("lessons"),
+    order: v.number(),
+    startSec: v.number(),
+    endSec: v.number(),
+    text: v.string(),
+  }).index("by_lessonId", ["lessonId", "order"]),
+
+  waitlist: defineTable({
+    email: v.string(),
+    courseId: v.id("courses"),
+    createdAt: v.number(),
+  }).index("by_course_email", ["courseId", "email"]),
+
+  setupProgress: defineTable({
+    userId: v.id("users"),
+    courseId: v.id("courses"),
+    doneIds: v.array(v.string()),
+  }).index("by_user_course", ["userId", "courseId"]),
+
   adminProfiles: defineTable({
     userId: v.id("users"), // Convex Auth's users table
     role: staffRole,

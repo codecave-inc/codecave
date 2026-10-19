@@ -8,22 +8,28 @@ import Sponsors from "./Sponsors";
 import Faq from "./Faq";
 import Pricing from "./Pricing";
 import Settings from "./Settings";
+import Courses from "./Courses";
 
 const NAV = [
+  { key: "courses", label: "Academy courses", needs: "content" },
   { key: "submissions", label: "Submissions" },
   { key: "portfolio", label: "Portfolio" },
   { key: "sponsors", label: "Sponsors" },
   { key: "faq", label: "FAQ" },
   { key: "pricing", label: "Pricing tiers" },
   { key: "settings", label: "Settings" },
-] as const;
+] as { key: string; label: string; needs?: "content" }[];
 
-type Tab = (typeof NAV)[number]["key"];
+type Tab = string;
 
-export default function Dashboard({ me }: { me: { email: string | null; role: string } }) {
-  const [tab, setTab] = useState<Tab>("submissions");
+type Me = { email: string | null; role: string; canManageSite: boolean; canManageContent: boolean };
+
+export default function Dashboard({ me }: { me: Me }) {
+  // Show each person only what their role can use. (The server checks too.)
+  const nav = NAV.filter((n) => (n.needs === "content" ? me.canManageContent : me.canManageSite));
+  const [tab, setTab] = useState<Tab>(me.canManageSite ? "submissions" : "courses");
   const { signOut } = useAuthActions();
-  const counts = useQuery(api.adminSubmissions.countNewByTable, {});
+  const counts = useQuery(api.adminSubmissions.countNewByTable, me.canManageSite ? {} : "skip");
   const totalNew = counts ? Object.values(counts).reduce((a, b) => a + b, 0) : 0;
 
   return (
@@ -31,7 +37,7 @@ export default function Dashboard({ me }: { me: { email: string | null; role: st
       <aside className="sidebar">
         <div className="sidebar__brand">CodeCave Admin</div>
         <nav>
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <button
               key={n.key}
               className={"sidebar__link" + (tab === n.key ? " is-active" : "")}
@@ -48,12 +54,14 @@ export default function Dashboard({ me }: { me: { email: string | null; role: st
         </div>
       </aside>
       <main className="content">
-        {tab === "submissions" && <Submissions counts={counts} />}
-        {tab === "portfolio" && <Portfolio />}
-        {tab === "sponsors" && <Sponsors />}
-        {tab === "faq" && <Faq />}
-        {tab === "pricing" && <Pricing />}
-        {tab === "settings" && <Settings />}
+        {nav.length === 0 && <p>Your role doesn't have any admin screens yet.</p>}
+        {tab === "courses" && me.canManageContent && <Courses canDelete={me.canManageSite} />}
+        {tab === "submissions" && me.canManageSite && <Submissions counts={counts} />}
+        {tab === "portfolio" && me.canManageSite && <Portfolio />}
+        {tab === "sponsors" && me.canManageSite && <Sponsors />}
+        {tab === "faq" && me.canManageSite && <Faq />}
+        {tab === "pricing" && me.canManageSite && <Pricing />}
+        {tab === "settings" && me.canManageSite && <Settings />}
       </main>
     </div>
   );

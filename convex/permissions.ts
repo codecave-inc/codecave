@@ -16,6 +16,8 @@ export type StaffRole = Doc<"adminProfiles">["role"];
 export const SITE_ROLES: readonly StaffRole[] = ["owner", "editor"];
 /** Roles that may create and edit Academy courses and lessons. */
 export const CONTENT_ROLES: readonly StaffRole[] = ["owner", "editor", "instructor"];
+/** Roles that may review reported comments. */
+export const MODERATION_ROLES: readonly StaffRole[] = ["owner", "editor", "moderator"];
 /** Super Admin only (team management, audit log). */
 export const OWNER_ONLY: readonly StaffRole[] = ["owner"];
 

@@ -269,6 +269,68 @@ export default defineSchema({
     doneIds: v.array(v.string()),
   }).index("by_user_course", ["userId", "courseId"]),
 
+  // ---------------------------------------------------------------
+  // Lesson experience (Phase 3): progress, notes, ratings, comments.
+  // ---------------------------------------------------------------
+  enrollments: defineTable({
+    userId: v.id("users"),
+    courseId: v.id("courses"),
+    startedAt: v.number(),
+  }).index("by_user_course", ["userId", "courseId"]).index("by_user", ["userId"]),
+
+  lessonProgress: defineTable({
+    userId: v.id("users"),
+    lessonId: v.id("lessons"),
+    courseId: v.id("courses"),
+    // Merged, sorted, non-overlapping [startSec, endSec] ranges actually watched.
+    watchedRanges: v.array(v.object({ start: v.number(), end: v.number() })),
+    watchedSec: v.number(),
+    watchedPct: v.number(),
+    lastPositionSec: v.number(),
+    videoComplete: v.boolean(),
+    lastSavedAt: v.number(),
+  })
+    .index("by_user_lesson", ["userId", "lessonId"])
+    .index("by_user_course", ["userId", "courseId"])
+    .index("by_user_updated", ["userId", "lastSavedAt"]),
+
+  notes: defineTable({
+    userId: v.id("users"),
+    lessonId: v.id("lessons"),
+    timestampSec: v.number(),
+    body: v.string(),
+    createdAt: v.number(),
+  }).index("by_user_lesson", ["userId", "lessonId", "timestampSec"]),
+
+  ratings: defineTable({
+    userId: v.id("users"),
+    lessonId: v.id("lessons"),
+    stars: v.number(),
+    feedback: v.optional(v.string()),
+    updatedAt: v.number(),
+  }).index("by_user_lesson", ["userId", "lessonId"]).index("by_lesson", ["lessonId"]),
+
+  comments: defineTable({
+    lessonId: v.id("lessons"),
+    userId: v.id("users"),
+    parentId: v.optional(v.id("comments")),
+    body: v.string(),
+    status: v.union(v.literal("visible"), v.literal("reported"), v.literal("hidden")),
+    createdAt: v.number(),
+  }).index("by_lesson", ["lessonId", "createdAt"]).index("by_status", ["status", "createdAt"]),
+
+  commentReports: defineTable({
+    commentId: v.id("comments"),
+    userId: v.id("users"),
+    createdAt: v.number(),
+  }).index("by_comment_user", ["commentId", "userId"]),
+
+  videoRequests: defineTable({
+    userId: v.id("users"),
+    lessonId: v.id("lessons"),
+    at: v.number(),
+  }).index("by_user_at", ["userId", "at"]),
+
   adminProfiles: defineTable({
     userId: v.id("users"), // Convex Auth's users table
     role: staffRole,

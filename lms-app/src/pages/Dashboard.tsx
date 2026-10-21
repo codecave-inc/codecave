@@ -1,5 +1,6 @@
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
+import { Link } from "react-router-dom";
 import { CourseCard } from "../components/CourseCard";
 import { Spinner } from "../components/ui";
 
@@ -7,6 +8,7 @@ import { Spinner } from "../components/ui";
 export default function Dashboard() {
   const me = useQuery(api.profiles.me, {});
   const catalog = useQuery(api.courses.catalog, {});
+  const resume = useQuery(api.learn.continueLearning, {});
   const first = me?.name?.split(" ")[0];
   const focused = catalog?.filter((c) => c.type === "focused");
 
@@ -20,6 +22,17 @@ export default function Dashboard() {
         <p className="mt-4 max-w-2xl rounded-sm border border-primary/30 bg-primary/10 px-3 py-2 text-sm">
           You're signed in with a staff account ({me.staffRole}).
         </p>
+      )}
+
+      {resume && (
+        <Link to={`/courses/${resume.courseSlug}/lessons/${resume.lessonId}`} className="mt-8 flex items-center justify-between gap-4 rounded-md border border-primary/30 bg-primary/10 px-5 py-4 hover:border-primary">
+          <span>
+            <span className="block font-mono text-xs uppercase tracking-[.2em] text-primary">{resume.complete ? "Watch again" : "Continue where you left off"}</span>
+            <span className="mt-1 block font-semibold">Lesson {resume.lessonNumber}: {resume.lessonTitle}</span>
+            <span className="text-sm text-ink-2">{resume.courseTitle}{resume.complete ? "" : ` · ${Math.round(resume.pct)}% watched`}</span>
+          </span>
+          <span aria-hidden="true" className="text-primary">→</span>
+        </Link>
       )}
 
       <h2 className="mt-10 text-xl">Professional courses</h2>

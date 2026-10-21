@@ -17,6 +17,11 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   formGlobal: { kind: "token bucket", rate: 150, period: HOUR, capacity: 100 },
   authEmailPerAddress: { kind: "token bucket", rate: 5, period: HOUR, capacity: 5 },
   authEmailGlobal: { kind: "token bucket", rate: 150, period: HOUR, capacity: 100 },
+  // Signed-in learners (Phase 3)
+  videoRequestPerUser: { kind: "token bucket", rate: 60, period: HOUR, capacity: 30 },
+  progressPerUser: { kind: "token bucket", rate: 1500, period: HOUR, capacity: 120 },
+  commentPerUser: { kind: "token bucket", rate: 12, period: HOUR, capacity: 6 },
+  notePerUser: { kind: "token bucket", rate: 120, period: HOUR, capacity: 30 },
 });
 
 /** Call from every public form mutation, with the cleaned email. */

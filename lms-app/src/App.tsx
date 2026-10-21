@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { Guards } from "./components/Guards";
 import CoursePage from "./pages/CoursePage";
+import LessonPage from "./pages/LessonPage";
 import SetupGuide from "./pages/SetupGuide";
 import Utility from "./pages/Utility";
 import CompleteProfile from "./pages/CompleteProfile";
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/utility" element={<Utility />} />
           <Route path="/courses/:slug" element={<CoursePage />} />
           <Route path="/courses/:slug/setup" element={<SetupGuide />} />
+          <Route path="/courses/:slug/lessons/:lessonId" element={<LessonPage />} />
         </Route>
       </Route>
 

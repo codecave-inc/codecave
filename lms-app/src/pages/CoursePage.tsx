@@ -10,18 +10,28 @@ import { NotFoundBody } from "./Placeholders";
 
 type Lesson = { _id: string; number: number; title: string; summary: string; durationSec: number; isFreePreview: boolean; status: "published" | "draft" | "coming_soon" };
 
-function LessonRow({ l }: { l: Lesson }) {
-  return (
-    <li className="flex items-start gap-4 border-t border-line px-5 py-3 first:border-t-0">
+type Prog = Record<string, { pct: number; complete: boolean }>;
+
+function LessonRow({ l, slug, progress }: { l: Lesson; slug: string; progress: Prog }) {
+  const soon = l.status === "coming_soon";
+  const p = progress[l._id];
+  const inner = (
+    <>
       <span className="w-6 shrink-0 pt-0.5 font-mono text-xs text-muted">{l.number}</span>
       <div className="min-w-0 flex-1">
         <p className="font-semibold">{l.title}</p>
         {l.summary && <p className="mt-0.5 text-sm text-ink-2">{l.summary}</p>}
       </div>
       <div className="shrink-0 text-right text-xs text-muted">
-        {l.status === "coming_soon" ? <span className="rounded-full bg-primary/10 px-2 py-0.5 font-semibold text-primary">Coming soon</span> : formatDuration(l.durationSec)}
-        {l.isFreePreview && l.status !== "coming_soon" && <p className="mt-1 font-semibold text-success">Free</p>}
+        {soon ? <span className="rounded-full bg-primary/10 px-2 py-0.5 font-semibold text-primary">Coming soon</span> : formatDuration(l.durationSec)}
+        {l.isFreePreview && !soon && <p className="mt-1 font-semibold text-success">Free</p>}
+        {p && !soon && <p className={`mt-1 font-semibold ${p.complete ? "text-success" : "text-primary"}`}>{p.complete ? "✓ Watched" : `${Math.round(p.pct)}%`}</p>}
       </div>
+    </>
+  );
+  return (
+    <li className="border-t border-line first:border-t-0">
+      {soon ? <div className="flex items-start gap-4 px-5 py-3">{inner}</div> : <Link to={`/courses/${slug}/lessons/${l._id}`} className="flex items-start gap-4 px-5 py-3 hover:bg-bg-alt">{inner}</Link>}
     </li>
   );
 }
@@ -63,6 +73,7 @@ function Waitlist({ courseId }: { courseId: Id<"courses"> }) {
 export default function CoursePage() {
   const { slug = "" } = useParams();
   const course = useQuery(api.courses.bySlug, { slug });
+  const progress = (useQuery(api.learn.courseProgress, course ? { courseId: course._id } : "skip") ?? {}) as Prog;
 
   if (course === undefined) return <div className="grid min-h-[50vh] place-items-center text-primary"><Spinner className="h-8 w-8" /></div>;
   if (course === null) return <NotFoundBody />;
@@ -104,15 +115,14 @@ export default function CoursePage() {
                   <h3 className="text-base">Module {m.number}: {m.title}</h3>
                   {m.outcome && <p className="mt-1 text-sm text-ink-2">{m.outcome}</p>}
                 </div>
-                <ul>{m.lessons.map((l) => <LessonRow key={l._id} l={l} />)}</ul>
+                <ul>{m.lessons.map((l) => <LessonRow key={l._id} l={l} slug={course.slug} progress={progress} />)}</ul>
               </section>
             ))}
             {course.lessons.length > 0 && (
-              <section className="overflow-hidden rounded-md border border-line bg-surface shadow-sm"><ul>{course.lessons.map((l) => <LessonRow key={l._id} l={l} />)}</ul></section>
+              <section className="overflow-hidden rounded-md border border-line bg-surface shadow-sm"><ul>{course.lessons.map((l) => <LessonRow key={l._id} l={l} slug={course.slug} progress={progress} />)}</ul></section>
             )}
             {all.length === 0 && <p className="text-ink-2">Lessons are being added. Check back soon.</p>}
           </div>
-          <p className="mt-6 text-sm text-muted">Watching lessons opens in the next update.</p>
         </>
       )}
     </main>

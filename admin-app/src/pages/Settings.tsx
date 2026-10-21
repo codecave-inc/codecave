@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 
 const KNOWN_KEYS: { key: string; label: string; placeholder?: string }[] = [
+  { key: "private.openAccess", label: "Academy: let every signed-in student open all published lessons (type true while testing; leave empty once payments are live)", placeholder: "true" },
   { key: "hackathonDate", label: "Hackathon 27 date (ISO format)", placeholder: "2027-03-14T09:00:00Z" },
   { key: "contactPhone", label: "Contact phone" },
   { key: "contactAddress", label: "Contact address" },

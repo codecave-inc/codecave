@@ -41,6 +41,7 @@ const MINIMAL_DOCS: Record<string, Record<string, unknown>> = {
     objectives: [], keyConcepts: [], notesMd: "", promptCards: [], taskMd: "", pitfalls: [], chapters: [], tools: [],
     studentOutput: "", evidenceMd: "", assetsNote: "", resources: [], recordingFlow: [],
   },
+  comments: { lessonId: "PLACEHOLDER_LESSON", userId: "PLACEHOLDER_USER", body: "b", status: "reported", createdAt: 0 },
 };
 
 /** Builds a value that satisfies an exported Convex validator (JSON form). */
@@ -86,6 +87,8 @@ describe("admin functions — who can call them", () => {
       ids[table] = await t.run(async (ctx) => {
         const withRefs = { ...doc } as Record<string, unknown>;
         if (withRefs.courseId === "PLACEHOLDER") withRefs.courseId = ids.courses;
+        if (withRefs.lessonId === "PLACEHOLDER_LESSON") withRefs.lessonId = ids.lessons;
+        if (withRefs.userId === "PLACEHOLDER_USER") withRefs.userId = studentId;
         const id = await (ctx.db as any).insert(table, withRefs);
         await ctx.db.delete(id); // well-formed id of the right table, pointing at nothing
         return id as string;
@@ -94,7 +97,7 @@ describe("admin functions — who can call them", () => {
     ids.users = studentId as string;
 
     const AUTH_ERROR = /Not signed in|doesn't have admin access|role doesn't allow/;
-    const files = import.meta.glob(["../convex/admin*.ts", "../convex/staff.ts", "../convex/courseAdmin.ts"], { eager: true }) as Record<string, Record<string, any>>;
+    const files = import.meta.glob(["../convex/admin*.ts", "../convex/staff.ts", "../convex/courseAdmin.ts", "../convex/commentAdmin.ts"], { eager: true }) as Record<string, Record<string, any>>;
     let checked = 0;
     for (const [file, mod] of Object.entries(files)) {
       for (const [name, fn] of Object.entries(mod)) {

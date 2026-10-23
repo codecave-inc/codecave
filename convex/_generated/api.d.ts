@@ -8,6 +8,11 @@
  * @module
  */
 
+import type * as aiAdmin from "../aiAdmin.js";
+import type * as aiGateway from "../aiGateway.js";
+import type * as aiSettings from "../aiSettings.js";
+import type * as kody from "../kody.js";
+import type * as kodyPrompt from "../kodyPrompt.js";
 import type * as adminAuth from "../adminAuth.js";
 import type * as adminContent from "../adminContent.js";
 import type * as adminSubmissions from "../adminSubmissions.js";
@@ -42,6 +47,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  aiAdmin: typeof aiAdmin;
+  aiGateway: typeof aiGateway;
+  aiSettings: typeof aiSettings;
+  kody: typeof kody;
+  kodyPrompt: typeof kodyPrompt;
   adminAuth: typeof adminAuth;
   adminContent: typeof adminContent;
   adminSubmissions: typeof adminSubmissions;

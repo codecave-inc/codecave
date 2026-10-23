@@ -153,6 +153,8 @@ export const saveSetting = mutation({
   args: { key: v.string(), value: v.string() },
   handler: async (ctx, { key, value }) => {
     await requireAdmin(ctx);
+    // AI settings have their own owner-only screen (aiAdmin.ts) with validation.
+    if (key.startsWith("private.ai.")) throw new Error("Use the AI settings screen for that.");
     const existing = await ctx.db
       .query("siteSettings")
       .withIndex("by_key", (q) => q.eq("key", key))

@@ -21,6 +21,7 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   videoRequestPerUser: { kind: "token bucket", rate: 60, period: HOUR, capacity: 30 },
   progressPerUser: { kind: "token bucket", rate: 1500, period: HOUR, capacity: 120 },
   commentPerUser: { kind: "token bucket", rate: 12, period: HOUR, capacity: 6 },
+  kodyPerUser: { kind: "token bucket", rate: 30, period: HOUR, capacity: 6 },
   notePerUser: { kind: "token bucket", rate: 120, period: HOUR, capacity: 30 },
 });
 

@@ -97,7 +97,7 @@ describe("admin functions — who can call them", () => {
     ids.users = studentId as string;
 
     const AUTH_ERROR = /Not signed in|doesn't have admin access|role doesn't allow/;
-    const files = import.meta.glob(["../convex/admin*.ts", "../convex/staff.ts", "../convex/courseAdmin.ts", "../convex/commentAdmin.ts"], { eager: true }) as Record<string, Record<string, any>>;
+    const files = import.meta.glob(["../convex/admin*.ts", "../convex/staff.ts", "../convex/courseAdmin.ts", "../convex/commentAdmin.ts", "../convex/aiAdmin.ts"], { eager: true }) as Record<string, Record<string, any>>;
     let checked = 0;
     for (const [file, mod] of Object.entries(files)) {
       for (const [name, fn] of Object.entries(mod)) {

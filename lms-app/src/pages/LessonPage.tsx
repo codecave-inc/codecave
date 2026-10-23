@@ -9,6 +9,7 @@ import { formatDuration } from "../lib/format";
 import { Alert, Spinner } from "../components/ui";
 import { VideoPlayer } from "../components/VideoPlayer";
 import type { PlayerHandle } from "../components/VideoPlayer";
+import { KodyChat } from "../components/lesson/KodyChat";
 import { CommentsPanel } from "../components/lesson/CommentsPanel";
 import { LessonTab } from "../components/lesson/LessonTab";
 import { NotesPanel } from "../components/lesson/NotesPanel";
@@ -23,16 +24,6 @@ const TABS: { key: TabKey; label: string; mobileOnly?: boolean }[] = [
   { key: "resources", label: "Resources" },
   { key: "check", label: "Check & submit" },
 ];
-
-function KodyPane() {
-  return (
-    <aside className="rounded-md border border-line bg-surface p-5 shadow-sm" aria-label="Kody, your AI learning partner">
-      <p className="font-mono text-xs uppercase tracking-[.2em] text-primary">Kody</p>
-      <h2 className="mt-1 text-lg">Your AI learning partner</h2>
-      <p className="mt-2 text-sm text-ink-2">Kody will watch alongside you, explain ideas, give hints and challenge you. This arrives in the next update.</p>
-    </aside>
-  );
-}
 
 function VideoArea({ lessonId, onReady }: { lessonId: Id<"lessons">; onReady: (h: PlayerHandle | null) => void }) {
   const request = useMutation(api.learn.requestVideo);
@@ -63,10 +54,24 @@ function VideoArea({ lessonId, onReady }: { lessonId: Id<"lessons">; onReady: (h
   return <VideoPlayer key={video.videoId} ref={handle} videoId={video.videoId} startSec={video.resumeSec} onProgress={onProgress} />;
 }
 
+/** True on screens wide enough for the side-by-side layout (so only ONE Kody chat is ever mounted). */
+function useWide() {
+  const q = "(min-width: 1024px)";
+  const [wide, setWide] = useState(() => typeof window !== "undefined" && window.matchMedia(q).matches);
+  useEffect(() => {
+    const m = window.matchMedia(q);
+    const on = () => setWide(m.matches);
+    m.addEventListener("change", on);
+    return () => m.removeEventListener("change", on);
+  }, []);
+  return wide;
+}
+
 export default function LessonPage() {
   const { slug = "", lessonId = "" } = useParams();
   const nav = useNavigate();
   const data = useQuery(api.learn.lesson, { lessonId: lessonId as Id<"lessons"> });
+  const wide = useWide();
   const [tab, setTab] = useState<TabKey>("lesson");
   const player = useRef<PlayerHandle | null>(null);
   const setPlayer = useCallback((h: PlayerHandle | null) => { player.current = h; }, []);
@@ -125,7 +130,7 @@ export default function LessonPage() {
             ))}
           </div>
           <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="pb-4">
-            {tab === "kody" && <KodyPane />}
+            {tab === "kody" && !wide && <KodyChat key={id} lessonId={id} currentTime={currentTime} />}
             {tab === "lesson" && <LessonTab lessonId={id} summary={lesson.summary} objectives={lesson.objectives} content={c} seek={seek} />}
             {tab === "notes" && <NotesPanel lessonId={id} lessonTitle={lesson.title} currentTime={currentTime} seek={seek} />}
             {tab === "comments" && <CommentsPanel lessonId={id} />}
@@ -150,7 +155,7 @@ export default function LessonPage() {
             {data.nav.next ? <Link className="link text-right" to={`/courses/${data.courseSlug}/lessons/${data.nav.next._id}`}>{data.nav.next.title} →</Link> : <span />}
           </nav>
         </div>
-        <div className="hidden lg:block"><div className="sticky top-6"><KodyPane /></div></div>
+        {wide && <div><div className="sticky top-6"><KodyChat key={id} lessonId={id} currentTime={currentTime} /></div></div>}
       </div>
     </main>
   );

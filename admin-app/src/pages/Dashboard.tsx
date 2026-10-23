@@ -10,6 +10,7 @@ import Pricing from "./Pricing";
 import Settings from "./Settings";
 import Courses from "./Courses";
 import Comments from "./Comments";
+import AiSettings from "./AiSettings";
 
 const NAV = [
   { key: "courses", label: "Academy courses", needs: "content" },
@@ -20,15 +21,16 @@ const NAV = [
   { key: "faq", label: "FAQ" },
   { key: "pricing", label: "Pricing tiers" },
   { key: "settings", label: "Settings" },
-] as { key: string; label: string; needs?: "content" | "moderate" }[];
+  { key: "ai", label: "AI settings (Kody)", needs: "owner" },
+] as { key: string; label: string; needs?: "content" | "moderate" | "owner" }[];
 
 type Tab = string;
 
-type Me = { email: string | null; role: string; canManageSite: boolean; canManageContent: boolean; canModerate: boolean };
+type Me = { email: string | null; role: string; canManageSite: boolean; canManageContent: boolean; canModerate: boolean; canManageTeam?: boolean };
 
 export default function Dashboard({ me }: { me: Me }) {
   // Show each person only what their role can use. (The server checks too.)
-  const nav = NAV.filter((n) => (n.needs === "content" ? me.canManageContent : n.needs === "moderate" ? me.canModerate : me.canManageSite));
+  const nav = NAV.filter((n) => (n.needs === "owner" ? !!me.canManageTeam : n.needs === "content" ? me.canManageContent : n.needs === "moderate" ? me.canModerate : me.canManageSite));
   const [tab, setTab] = useState<Tab>(me.canManageSite ? "submissions" : me.canManageContent ? "courses" : "comments");
   const { signOut } = useAuthActions();
   const counts = useQuery(api.adminSubmissions.countNewByTable, me.canManageSite ? {} : "skip");
@@ -65,6 +67,7 @@ export default function Dashboard({ me }: { me: Me }) {
         {tab === "faq" && me.canManageSite && <Faq />}
         {tab === "pricing" && me.canManageSite && <Pricing />}
         {tab === "settings" && me.canManageSite && <Settings />}
+        {tab === "ai" && me.canManageTeam && <AiSettings />}
       </main>
     </div>
   );

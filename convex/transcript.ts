@@ -17,6 +17,7 @@ function toSec(h: string | undefined, m: string, s: string, ms: string): number 
 export const MAX_TRANSCRIPT_CHARS = 400_000;
 const TARGET_CHARS = 700;
 const MAX_CHUNKS = 1500;
+const MAX_CHUNK_SEC = 25;
 
 export function parseTranscript(raw: string): Chunk[] {
   if (raw.length > MAX_TRANSCRIPT_CHARS) fail("That transcript is too large.");
@@ -52,7 +53,8 @@ export function parseTranscript(raw: string): Chunk[] {
   const merged: Chunk[] = [];
   let cur: Chunk | null = null;
   for (const c of cues) {
-    if (cur && cur.text.length + c.text.length + 1 <= TARGET_CHARS) {
+    // Keep chunks short in TIME too, so Kody can cut the transcript close to the playback position.
+    if (cur && cur.text.length + c.text.length + 1 <= TARGET_CHARS && c.endSec - cur.startSec <= MAX_CHUNK_SEC) {
       cur.text += " " + c.text;
       cur.endSec = c.endSec;
     } else {

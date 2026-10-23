@@ -331,6 +331,52 @@ export default defineSchema({
     at: v.number(),
   }).index("by_user_at", ["userId", "at"]),
 
+  // ---------------------------------------------------------------
+  // Kody, the AI learning partner (Phase 4)
+  // ---------------------------------------------------------------
+  aiThreads: defineTable({
+    userId: v.id("users"),
+    lessonId: v.id("lessons"),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user_lesson", ["userId", "lessonId"]),
+
+  aiMessages: defineTable({
+    threadId: v.id("aiThreads"),
+    userId: v.id("users"),
+    lessonId: v.id("lessons"),
+    role: v.union(v.literal("user"), v.literal("assistant")),
+    kind: v.optional(v.string()), // quick action: explain | hint | quiz | stuck | free
+    content: v.string(),
+    status: v.union(v.literal("streaming"), v.literal("done"), v.literal("error")),
+    positionSec: v.optional(v.number()), // where the student was in the video when they asked
+    provider: v.optional(v.string()),
+    model: v.optional(v.string()),
+    tokensIn: v.optional(v.number()),
+    tokensOut: v.optional(v.number()),
+    costUsd: v.optional(v.number()),
+    createdAt: v.number(),
+  }).index("by_thread", ["threadId", "createdAt"]),
+
+  // One row per student per day (UTC): drives the daily message limit and the cost log.
+  aiUsage: defineTable({
+    userId: v.id("users"),
+    day: v.string(), // YYYY-MM-DD
+    messages: v.number(),
+    tokensIn: v.number(),
+    tokensOut: v.number(),
+    costUsd: v.number(),
+  }).index("by_user_day", ["userId", "day"]).index("by_day", ["day"]),
+
+  // One row per month: the global budget guard.
+  aiMonth: defineTable({
+    month: v.string(), // YYYY-MM
+    messages: v.number(),
+    tokensIn: v.number(),
+    tokensOut: v.number(),
+    costUsd: v.number(),
+  }).index("by_month", ["month"]),
+
   adminProfiles: defineTable({
     userId: v.id("users"), // Convex Auth's users table
     role: staffRole,
